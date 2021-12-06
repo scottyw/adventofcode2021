@@ -77,7 +77,7 @@ func FileLinesToIntSlice(filePath string) []int {
 
 // FileToIntSlice reads a CSV file into a slice of ints
 func FileToIntSlice(filePath string) []int {
-	return ToIntSlice(FileToString(filePath), ",")
+	return ToIntSlice(strings.TrimSpace(FileToString(filePath)), ",")
 }
 
 // ToIntSlice reads CSV input into a slice of ints
