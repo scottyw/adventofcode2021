@@ -77,11 +77,42 @@ func FileLinesToIntSlice(filePath string) []int {
 
 // FileToIntSlice reads a CSV file into a slice of ints
 func FileToIntSlice(filePath string) []int {
+	return ToIntSlice(FileToString(filePath), ",")
+}
+
+// ToIntSlice reads CSV input into a slice of ints
+func ToIntSlice(input, sep string) []int {
 	var ints []int
-	for _, s := range strings.Split(FileToString(filePath), ",") {
+	for _, s := range strings.Split(input, sep) {
+		if s == "" {
+			continue
+		}
 		ints = append(ints, Atoi(s))
 	}
 	return ints
+}
+
+// To3DIntSlice reads a series of empty-line separated 2D series into a slice
+func To3DIntSlice(lines []string, sep string) [][][]int {
+	is3d := [][][]int{}
+	is2d := [][]int{}
+	for _, line := range lines {
+		if len(line) == 0 {
+			if len(is2d) > 0 {
+				is3d = append(is3d, is2d)
+				is2d = [][]int{}
+			}
+			continue
+		}
+		is := ToIntSlice(line, sep)
+		if len(is) > 0 {
+			is2d = append(is2d, is)
+		}
+	}
+	if len(is2d) > 0 {
+		is3d = append(is3d, is2d)
+	}
+	return is3d
 }
 
 // FileLinesToIntSliceSlice reads a file where each line is CSV into a slice of slices of ints
